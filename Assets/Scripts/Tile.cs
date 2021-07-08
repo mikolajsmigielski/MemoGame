@@ -5,10 +5,13 @@ using UnityEngine;
 public class Tile : MonoBehaviour
 {
     public bool Active = true;
+    public Sprite BackFace;
     void Start()
     {
-
         transform.rotation = GetTargetRotation();
+        var BackObject = transform.Find("Back");
+        var spriteRenderer = BackObject.transform.GetComponent<SpriteRenderer>();
+        spriteRenderer.sprite = BackFace;
     }
 
     
