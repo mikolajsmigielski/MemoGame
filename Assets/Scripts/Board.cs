@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
+
 public class Board : MonoBehaviour
 {
     public GameObject TilePrefab;
@@ -10,10 +11,12 @@ public class Board : MonoBehaviour
     public int Height = 4;
     public Sprite[] Sprites;
     Tile[] Tiles;
+    public TextMesh WinText;
 
     public bool CanMove = false;
     IEnumerator Start()
     {
+        WinText.GetComponent<Renderer>().enabled = false;
         CreateTiles(Width, Height);
         ShuffleTiles();
         PlaceTiles();
@@ -24,10 +27,7 @@ public class Board : MonoBehaviour
     }
 
     
-    void Update()
-    {
-        
-    }
+    
     Tile CreateTile(Sprite FaceSprite)
     {
         var gameobject = Instantiate(TilePrefab);
@@ -105,7 +105,7 @@ public class Board : MonoBehaviour
         if (CheckIfEnd())
         {
             CanMove = false;
-            Debug.Log("GameOver");
+            WinText.GetComponent<Renderer>().enabled = true;
             yield return new WaitForSeconds(1f);
             Application.Quit();
         }
