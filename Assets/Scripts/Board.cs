@@ -8,10 +8,11 @@ public class Board : MonoBehaviour
     public int Width = 6;
     public int Height = 4;
     public Sprite[] Sprites;
+    Tile[] Tiles;
     void Start()
     {
         CreateTiles(Width, Height);
-        
+        PlaceTiles();
     }
 
     
@@ -19,14 +20,33 @@ public class Board : MonoBehaviour
     {
         
     }
+    Tile CreateTile()
+    {
+        var gameobject = Instantiate(TilePrefab);
+        
+        var tile = gameobject.GetComponent<Tile>();
+        tile.BackFace = GetRandomSprite();
+        return tile;
+    }
     void CreateTiles(int x, int y)
     {
-        for (int i = 0; i < x; i++)
+        var length = Width * Height;
+        Tiles = new Tile[length];
+
+        for(int z = 0; z < length; z++)
         {
-            for (int j = 0; j < y; j++)
-            {
-                CreateTile(i, j);
-            }
+            Tiles[z] = CreateTile();
+        }
+
+        
+    }
+    void PlaceTiles()
+    {
+        for (int z = 0; z < Width * Height; z++)
+        {
+            int x = z % Width;
+            int y = z / Width;
+            Tiles[z].transform.position = Vector3.up * y * 2f + Vector3.right * x * 2f;
         }
     }
     Sprite GetRandomSprite()
@@ -35,10 +55,5 @@ public class Board : MonoBehaviour
         int index = Random.Range(0, length - 1);
         return Sprites[index];
     }
-    void CreateTile(int x, int y)
-    {
-        var tile = Instantiate(TilePrefab);
-        tile.transform.position += Vector3.up * y * 2f + Vector3.right * x * 2f;
-        tile.GetComponent<Tile>().BackFace = GetRandomSprite();
-    }
+    
 }
