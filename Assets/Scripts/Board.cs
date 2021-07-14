@@ -78,11 +78,20 @@ public class Board : MonoBehaviour
     }
     public void CheckPair()
     {
+        StartCoroutine(CheckPairCoroutine());
+    }
+     IEnumerator CheckPairCoroutine()
+    {
         var tilesActive = Tiles.Where(tile=>!tile.TimeToDie).Where(tile => tile.Active).ToArray();
         if (tilesActive.Length != 2)
-            return;
+            yield break;
         var tile1 = tilesActive[0];
         var tile2 = tilesActive[1];
+
+        CanMove = false;
+        yield return new WaitForSeconds(1f);
+        CanMove = true;
+
         if (tile1.BackFace == tile2.BackFace)
         {
             tile1.TimeToDie = true;
@@ -93,6 +102,17 @@ public class Board : MonoBehaviour
             tile1.Active = false;
             tile2.Active = false;
         }
+        if (CheckIfEnd())
+        {
+            CanMove = false;
+            Debug.Log("GameOver");
+            yield return new WaitForSeconds(1f);
+            Application.Quit();
+        }
+    }
+    bool CheckIfEnd()
+    {
+        return Tiles.All(tile => tile.TimeToDie == true);
     }
    
 }
