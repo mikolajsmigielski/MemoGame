@@ -76,5 +76,23 @@ public class Board : MonoBehaviour
     {
         Tiles.ToList().ForEach(tile => tile.Active = false);
     }
+    public void CheckPair()
+    {
+        var tilesActive = Tiles.Where(tile=>!tile.TimeToDie).Where(tile => tile.Active).ToArray();
+        if (tilesActive.Length != 2)
+            return;
+        var tile1 = tilesActive[0];
+        var tile2 = tilesActive[1];
+        if (tile1.BackFace == tile2.BackFace)
+        {
+            tile1.TimeToDie = true;
+            tile2.TimeToDie = true;
+        }
+        else
+        {
+            tile1.Active = false;
+            tile2.Active = false;
+        }
+    }
    
 }

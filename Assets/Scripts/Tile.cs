@@ -5,6 +5,7 @@ using UnityEngine;
 public class Tile : MonoBehaviour
 {
     public bool Active = true;
+    public bool TimeToDie = false;
     public Sprite BackFace;
     void Start()
     {
@@ -20,6 +21,8 @@ public class Tile : MonoBehaviour
     {
         var TargetRotation = GetTargetRotation();
         transform.rotation = Quaternion.Lerp(transform.rotation, TargetRotation, Time.deltaTime * 5f);
+        if (TimeToDie == true)
+            Destroy(gameObject);
     }
     Quaternion GetTargetRotation()
     {
@@ -28,8 +31,11 @@ public class Tile : MonoBehaviour
     }
     private void OnMouseDown()
     {
-        if (FindObjectOfType<Board>().CanMove == false)
+        var board = FindObjectOfType<Board>();
+        if (board.CanMove == false)
             return;
         Active = !Active;
+        board.CheckPair();
+         
     }
 }
