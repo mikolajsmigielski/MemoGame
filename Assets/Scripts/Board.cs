@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class Board : MonoBehaviour
 {
@@ -9,11 +10,17 @@ public class Board : MonoBehaviour
     public int Height = 4;
     public Sprite[] Sprites;
     Tile[] Tiles;
-    void Start()
+
+    public bool CanMove = false;
+    IEnumerator Start()
     {
         CreateTiles(Width, Height);
         ShuffleTiles();
         PlaceTiles();
+        CanMove = false;
+        yield return new WaitForSeconds(3f);
+        CanMove = true;
+        HideTiles();
     }
 
     
@@ -26,6 +33,7 @@ public class Board : MonoBehaviour
         var gameobject = Instantiate(TilePrefab);
         
         var tile = gameobject.GetComponent<Tile>();
+        tile.Active = true;
         tile.BackFace = FaceSprite;
         return tile;
     }
@@ -63,6 +71,10 @@ public class Board : MonoBehaviour
             int y = z / Width;
             Tiles[z].transform.position = Vector3.up * y * 2f + Vector3.right * x * 2f;
         }
+    }
+    void HideTiles()
+    {
+        Tiles.ToList().ForEach(tile => tile.Active = false);
     }
    
 }
